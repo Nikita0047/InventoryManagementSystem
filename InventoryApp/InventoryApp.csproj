@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\InventoryData\InventoryData.csproj" />
+    <ProjectReference Include="..\InventoryService\InventoryService.csproj" />
   </ItemGroup>
 
 </Project>
