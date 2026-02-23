@@ -45,7 +45,7 @@ namespace InventoryService
 
 
 
-            var expiryMinutes = int.Parse(_config["Jwt:ExpireMinutes"]);
+            var expiryMinutes = int.Parse(_config["Jwt:ExpiryMinutes"]);
             var token = GenrateJwtToken(user);
 
             return new AuthResponse
@@ -116,7 +116,7 @@ namespace InventoryService
         private  string GenrateJwtToken(Users user)
         {
             var jwtSettings = _config.GetSection("Jwt");
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]));
             //it creates a symmetric security key using
             //the secret key specified in the configuration.
             var claims = new List<Claim>
@@ -131,11 +131,12 @@ namespace InventoryService
             // List of claims to be included in the JWT token, such as user ID, email, role, and a unique identifier (JTI).
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             // It creates signing credentials using the symmetric key and specifies the HMAC SHA256 algorithm for signing the token.
+            var expiryMinutes = int.Parse(jwtSettings["ExpiryMinutes"]);
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(int.Parse(jwtSettings["ExpireMinutes"])),
+                expires: DateTime.UtcNow.AddMinutes(expiryMinutes),
                 signingCredentials: creds
             );
             // It creates a new JWT token with the specified issuer, audience, claims, expiration time, and signing credentials.
