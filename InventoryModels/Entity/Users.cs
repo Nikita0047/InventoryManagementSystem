@@ -11,17 +11,8 @@ namespace InventoryModels.Entity
     {
         [Key]
         public int Id { get; set; }
-
-        [Required]
-        [MaxLength(10)]
         public string FirstName { get; set; }
-
-        [Required]
-        [MaxLength(10)]
         public string LastName { get; set; }
-
-        [Required]
-        [EmailAddress]
         public string Email { get; set; }
         public string PasswordHash { get; set; }
         public string Role { get; set; }
