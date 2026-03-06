@@ -11,7 +11,7 @@ namespace InventoryService
     {
         Task<AuthResponse> SignUpAsync(SignUp request);  // Changed to AuthResponse
         Task<AuthResponse> SignInAsync(SignIn request);  // Changed to AuthResponse
-        Task<bool> SignOutAsync(string email);
+        
 
     }
 }

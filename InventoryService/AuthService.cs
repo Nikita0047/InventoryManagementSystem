@@ -1,6 +1,7 @@
 ﻿using InventoryModels.Auth;
 using InventoryModels.DTOs;
 using InventoryService.Repository;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -46,7 +47,7 @@ namespace InventoryService
 
 
             var expiryMinutes = int.Parse(_config["Jwt:ExpiryMinutes"]);
-            var token = GenrateJwtToken(user);
+            var token = await GenrateJwtToken(user);
 
             return new AuthResponse
             {
@@ -62,11 +63,7 @@ namespace InventoryService
 
         }
 
-        public Task<bool> SignOutAsync(string email)
-        {
-            throw new NotImplementedException();
-        }
-
+       
         public async Task<AuthResponse> SignUpAsync(SignUp request)
         {
             var Email = request.Email?.Trim().ToLower();
@@ -105,7 +102,7 @@ namespace InventoryService
             await _UserRepo.AddAsync(user);
             await _UnitOfWork.SaveAsync();
 
-            var token = GenrateJwtToken(user);
+            var token = await GenrateJwtToken(user);
 
             return new AuthResponse
             {
@@ -116,9 +113,9 @@ namespace InventoryService
             };
 
         }
-        private string GenrateJwtToken(Users user)
+        private async Task<string> GenrateJwtToken(Users user)
         {
-            var jwtSettings = _config.GetSection("Jwt");
+            var jwtSettings =  _config.GetSection("Jwt");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]));
             //it creates a symmetric security key using
             //the secret key specified in the configuration.
@@ -133,11 +130,19 @@ namespace InventoryService
 
             };
             // List of claims to be included in the JWT token, such as user ID, email, role, and a unique identifier (JTI).
+               var permissions =  await _UnitOfWork.Repository<UsersRole>()
+    .           GetQuery()
+               .Where(ur => ur.UserId == user.Id)
+               .SelectMany(ur => ur.Role.RolePermissions)
+               .Select(rp => rp.Permission.Code)
+               .ToListAsync();
 
-            foreach (var ur in user.UsersRole)
+
+            foreach (var permission in permissions)
             {
-                claims.Add(new Claim(ClaimTypes.Role, ur.Role.Name));
+                claims.Add(new Claim("permission", permission));
             }
+
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             // It creates signing credentials using the symmetric key and specifies the HMAC SHA256 algorithm for signing the token.
             var expiryMinutes = int.Parse(jwtSettings["ExpiryMinutes"]);

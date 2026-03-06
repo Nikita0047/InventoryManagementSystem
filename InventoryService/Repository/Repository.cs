@@ -48,5 +48,10 @@ namespace InventoryService.Repository
         {
             dbSet.Update(entity);
         }
+        public IQueryable<T> GetQuery()
+        {
+            return dbSet.AsQueryable();
+        }
+
     }
 }
