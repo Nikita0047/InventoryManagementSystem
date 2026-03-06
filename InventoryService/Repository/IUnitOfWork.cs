@@ -10,5 +10,6 @@ namespace InventoryService.Repository
     public interface IUnitOfWork
     {
         Task SaveAsync();
+        IRepository<T> Repository<T>() where T : class;
     }
 }
