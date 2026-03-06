@@ -1,5 +1,5 @@
-﻿using InventoryModels.DTOs;
-using InventoryModels.Entity;
+﻿using InventoryModels.Auth;
+using InventoryModels.DTOs;
 using InventoryService.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -16,13 +16,13 @@ namespace InventoryService
 {
     public class AuthService : IAuth
     {
-        
+
         private readonly IUnitOfWork _UnitOfWork;
         private readonly IUserRepo _UserRepo;
-        private readonly IConfiguration _config;  
-        public AuthService( IUnitOfWork unitOfWork, IUserRepo userRepo, IConfiguration config)
+        private readonly IConfiguration _config;
+        public AuthService(IUnitOfWork unitOfWork, IUserRepo userRepo, IConfiguration config)
         {
-            
+
             _UnitOfWork = unitOfWork;
             _UserRepo = userRepo;
             _config = config;
@@ -38,7 +38,7 @@ namespace InventoryService
             var user = await _UserRepo.GetByEmailAsync(email);
             if (user == null)
                 throw new UnauthorizedAccessException("Invalid username or password");
-          
+
             var isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
             if (!isPasswordValid)
                 throw new UnauthorizedAccessException("Invalid username or password ");
@@ -51,36 +51,40 @@ namespace InventoryService
             return new AuthResponse
             {
 
-                UserId= user.Id,
+                UserId = user.Id,
                 FullName = $"{user.FirstName} {user.LastName}",
                 Email = user.Email,
                 Token = token,
                 ExpiresAt = DateTime.UtcNow.AddMinutes(expiryMinutes),
-                Role = user.Role
+
 
             };
 
         }
 
+        public Task<bool> SignOutAsync(string email)
+        {
+            throw new NotImplementedException();
+        }
 
-        public  async Task<AuthResponse> SignUpAsync(SignUp request)
+        public async Task<AuthResponse> SignUpAsync(SignUp request)
         {
             var Email = request.Email?.Trim().ToLower();
-             var Password = request.Password?.Trim();
+            var Password = request.Password?.Trim();
             if (string.IsNullOrWhiteSpace(Email))
-               throw new ArgumentException("Email is required");
-          
+                throw new ArgumentException("Email is required");
+
 
             if (string.IsNullOrWhiteSpace(Password))
                 throw new ArgumentException("Password is required");
 
-            if(await _UserRepo.GetByEmailAsync(Email) != null)
+            if (await _UserRepo.GetByEmailAsync(Email) != null)
                 throw new InvalidOperationException("Email already exists");
 
-            if(string.IsNullOrWhiteSpace(request.FirstName))
+            if (string.IsNullOrWhiteSpace(request.FirstName))
                 throw new ArgumentException("First name is required");
 
-             if (string.IsNullOrWhiteSpace(request.LastName))
+            if (string.IsNullOrWhiteSpace(request.LastName))
                 throw new ArgumentException("Last name is required");
 
             var username = $"{request.FirstName}.{request.LastName}".ToLower();
@@ -92,13 +96,13 @@ namespace InventoryService
             {
                 Email = Email,
                 FirstName = request.FirstName.Trim(),
-                LastName =request.LastName.Trim(),
+                LastName = request.LastName.Trim(),
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(Password),
                 CreatedAt = DateTime.UtcNow,
-                Role = "User"
+
             };
 
-             await _UserRepo.AddAsync(user);
+            await _UserRepo.AddAsync(user);
             await _UnitOfWork.SaveAsync();
 
             var token = GenrateJwtToken(user);
@@ -108,12 +112,11 @@ namespace InventoryService
                 UserId = user.Id,
                 Email = user.Email,
                 FullName = $"{user.FirstName} {user.LastName}",
-                Role = user.Role,
                 Token = token
             };
 
         }
-        private  string GenrateJwtToken(Users user)
+        private string GenrateJwtToken(Users user)
         {
             var jwtSettings = _config.GetSection("Jwt");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]));
@@ -123,22 +126,29 @@ namespace InventoryService
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role),
+                
                 new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset
                 .UtcNow.ToUnixTimeSeconds().ToString(),
-                ClaimValueTypes.Integer64)
+                ClaimValueTypes.Integer64),
+
             };
             // List of claims to be included in the JWT token, such as user ID, email, role, and a unique identifier (JTI).
+
+            foreach (var ur in user.UsersRole)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, ur.Role.Name));
+            }
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             // It creates signing credentials using the symmetric key and specifies the HMAC SHA256 algorithm for signing the token.
             var expiryMinutes = int.Parse(jwtSettings["ExpiryMinutes"]);
-            var token = new JwtSecurityToken(
+            var token = new JwtSecurityToken
+              (
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(expiryMinutes),
                 signingCredentials: creds
-            );
+              );
             // It creates a new JWT token with the specified issuer, audience, claims, expiration time, and signing credentials.
             //it is a standard microsoft class for JWT token handling,
             //it provides methods for creating and validating JWT tokens.
@@ -146,9 +156,7 @@ namespace InventoryService
             // Finally, it returns the generated JWT token as a string using the WriteToken method of the JwtSecurityTokenHandler class.
         }
 
-        Task<bool> IAuth.SignOutAsync(string email)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
+    
+

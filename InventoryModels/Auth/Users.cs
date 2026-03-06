@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InventoryModels.Entity
+namespace InventoryModels.Auth
 {
     public class Users
     {
@@ -15,7 +15,8 @@ namespace InventoryModels.Entity
         public string LastName { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
-        public string Role { get; set; }
+        public ICollection<UsersRole> UsersRole { get; set; } = new List<UsersRole>();
+   
         public DateTime CreatedAt { get; set; }
         
     }

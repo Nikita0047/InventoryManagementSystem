@@ -1,5 +1,5 @@
 ﻿using InventoryData;
-using InventoryModels.Entity;
+using InventoryModels.Auth;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
