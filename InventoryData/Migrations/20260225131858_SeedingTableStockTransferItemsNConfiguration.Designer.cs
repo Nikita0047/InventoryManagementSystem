@@ -4,6 +4,7 @@ using InventoryData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryData.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260225131858_SeedingTableStockTransferItemsNConfiguration")]
+    partial class SeedingTableStockTransferItemsNConfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,217 +24,6 @@ namespace InventoryData.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("InventoryModels.Auth.Permission", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.ToTable("Permissions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Code = "product.read"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Code = "product.create"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Code = "product.update"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Code = "product.delete"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Code = "stock.read"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Code = "stock.adjust"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Code = "stock.transfer"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Code = "transfer.create"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Code = "transfer.view"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Code = "transfer.approve"
-                        });
-                });
-
-            modelBuilder.Entity("InventoryModels.Auth.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Manager"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "User"
-                        });
-                });
-
-            modelBuilder.Entity("InventoryModels.Auth.RolePermission", b =>
-                {
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PermissionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RoleId", "PermissionId");
-
-                    b.HasIndex("PermissionId");
-
-                    b.ToTable("RolePermissions");
-
-                    b.HasData(
-                        new
-                        {
-                            RoleId = 2,
-                            PermissionId = 2
-                        },
-                        new
-                        {
-                            RoleId = 2,
-                            PermissionId = 3
-                        },
-                        new
-                        {
-                            RoleId = 2,
-                            PermissionId = 6
-                        },
-                        new
-                        {
-                            RoleId = 2,
-                            PermissionId = 7
-                        },
-                        new
-                        {
-                            RoleId = 2,
-                            PermissionId = 8
-                        });
-                });
-
-            modelBuilder.Entity("InventoryModels.Auth.Users", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("users", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Nikita11@example.com",
-                            FirstName = "Nikita",
-                            LastName = "Kumari",
-                            PasswordHash = "$2a$11$nTmVXGGFcLgro0gYMwg1zOTTDqYLG3aQ1N5dlCUuaXOH8v.DivkxS"
-                        });
-                });
-
-            modelBuilder.Entity("InventoryModels.Auth.UsersRole", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("UserRoles");
-                });
 
             modelBuilder.Entity("InventoryModels.Entity.Category", b =>
                 {
@@ -489,6 +281,54 @@ namespace InventoryData.Migrations
                         });
                 });
 
+            modelBuilder.Entity("InventoryModels.Entity.Users", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2026, 2, 25, 13, 18, 56, 100, DateTimeKind.Utc).AddTicks(555),
+                            Email = "Nikita11@example.com",
+                            FirstName = "Nikita",
+                            LastName = "Kumari",
+                            PasswordHash = "$2a$11$j2bE6z0T4uZjwnODjuF9COac1brtNZuofl.UIB9Qno6axddtwSKm6",
+                            Role = "User"
+                        });
+                });
+
             modelBuilder.Entity("InventoryModels.Entity.Warehouse", b =>
                 {
                     b.Property<int>("Id")
@@ -533,44 +373,6 @@ namespace InventoryData.Migrations
                             Location = "Mumbai",
                             Name = "West Storage Hub"
                         });
-                });
-
-            modelBuilder.Entity("InventoryModels.Auth.RolePermission", b =>
-                {
-                    b.HasOne("InventoryModels.Auth.Permission", "Permission")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("InventoryModels.Auth.Role", "Role")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Permission");
-
-                    b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("InventoryModels.Auth.UsersRole", b =>
-                {
-                    b.HasOne("InventoryModels.Auth.Role", "Role")
-                        .WithMany("UsersRole")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("InventoryModels.Auth.Users", "User")
-                        .WithMany("UsersRole")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("InventoryModels.Entity.Product", b =>
@@ -635,23 +437,6 @@ namespace InventoryData.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("StockTransfer");
-                });
-
-            modelBuilder.Entity("InventoryModels.Auth.Permission", b =>
-                {
-                    b.Navigation("RolePermissions");
-                });
-
-            modelBuilder.Entity("InventoryModels.Auth.Role", b =>
-                {
-                    b.Navigation("RolePermissions");
-
-                    b.Navigation("UsersRole");
-                });
-
-            modelBuilder.Entity("InventoryModels.Auth.Users", b =>
-                {
-                    b.Navigation("UsersRole");
                 });
 
             modelBuilder.Entity("InventoryModels.Entity.Category", b =>

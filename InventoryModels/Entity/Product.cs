@@ -17,5 +17,5 @@ namespace InventoryModels.Entity
         public Category Category { get; set; } = null!;
 
         public ICollection<Stock> Stocks { get; set; } = new List<Stock>();
-    }
+    } 
 }

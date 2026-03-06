@@ -1,4 +1,4 @@
-﻿using InventoryModels.Entity;
+﻿using InventoryModels.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
