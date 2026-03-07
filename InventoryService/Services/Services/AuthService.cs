@@ -1,6 +1,7 @@
 ﻿using InventoryModels.Auth;
 using InventoryModels.DTOs;
 using InventoryService.Repository;
+using InventoryService.Services.IServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -13,7 +14,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InventoryService
+namespace InventoryService.Services.Services
 {
     public class AuthService : IAuth
     {

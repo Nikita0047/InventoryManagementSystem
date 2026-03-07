@@ -1,10 +1,10 @@
 
 using InventoryData;
-using InventoryService;
 using InventoryService.Repository;
+using InventoryService.Services.IServices;
+using InventoryService.Services.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.Extensions.DependencyInjection;
+
 
 namespace InventoryApp
 {
@@ -23,6 +23,14 @@ namespace InventoryApp
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IAuth, AuthService>();
 
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("CreateProduct",
+                    policy => policy.RequireClaim("permission", "CreateProduct"));
+
+                options.AddPolicy("TransferStock",
+                    policy => policy.RequireClaim("permission", "TransferStock"));
+            });
             builder.Services.AddControllers();
             builder.Services.AddAuthorization();
 
