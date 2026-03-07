@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InventoryService.Repository
+namespace InventoryRepository.Repository
 {
     public interface IRepository<T> where T: class
     {

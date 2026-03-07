@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InventoryService.Repository
+namespace InventoryRepository.Repository
 {
     public class UserRepo : Repository<Users>,IUserRepo
     {
