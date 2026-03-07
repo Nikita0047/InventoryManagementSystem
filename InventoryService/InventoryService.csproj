@@ -12,8 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\InventoryData\InventoryData.csproj" />
+
     <ProjectReference Include="..\InventoryModels\InventoryModels.csproj" />
+    <ProjectReference Include="..\InventoryRepository\InventoryRepository.csproj" />
   </ItemGroup>
 
 </Project>

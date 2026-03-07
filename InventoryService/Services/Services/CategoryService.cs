@@ -1,12 +1,7 @@
 ﻿using InventoryModels.DTOs;
 using InventoryModels.Entity;
-using InventoryService.Repository;
+using InventoryRepository.Repository;
 using InventoryService.Services.IServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InventoryService.Services.Services
 {
