@@ -1,6 +1,6 @@
 ﻿using InventoryModels.DTOs;
 using InventoryModels.Entity;
-using InventoryService;
+using InventoryService.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
