@@ -13,10 +13,10 @@ namespace InventoryService.Services.IServices
 
         Task<ProductDto?> GetProductByIdAsync(int id);
 
-        Task<ProductDto> CreateProductAsync(ProductDto dto);
+        Task<ProductDto> CreateAsync(ProductDto dto);
 
-        Task UpdateProductAsync(int id, ProductDto dto);
+        Task UpdateAsync(int id, ProductDto dto);
 
-        Task DeleteProductAsync(int id);
+        Task DeleteAsync(int id);
     }
 }

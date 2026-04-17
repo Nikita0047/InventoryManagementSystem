@@ -46,7 +46,7 @@ namespace InventoryService.Services.Services
             };
         }
 
-        public async Task<StockDto> CreateStockAsync(StockDto dto)
+        public async Task<StockDto> CreateAsync(StockDto dto)
         {
             var stock = new Stock
             {
@@ -63,7 +63,7 @@ namespace InventoryService.Services.Services
             return dto;
         }
 
-        public async Task UpdateStockAsync(int id, StockDto dto)
+        public async Task UpdateAsync(int id, StockDto dto)
         {
             var stock = await _stockRepo.GetByIdAsync(id);
 
@@ -79,7 +79,7 @@ namespace InventoryService.Services.Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task DeleteStockAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var stock = await _stockRepo.GetByIdAsync(id);
 

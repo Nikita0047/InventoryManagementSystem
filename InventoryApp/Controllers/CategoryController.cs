@@ -1,71 +1,73 @@
-﻿//using InventoryModels.DTOs;
-//using Microsoft.AspNetCore.Http;
-//using Microsoft.AspNetCore.Mvc;
+﻿using InventoryModels.DTOs;
+using InventoryService.Services.IServices;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
-//namespace InventoryApp.Controllers
-//{
-//    [Route("api/[controller]")]
-//    [ApiController]
-//    public class CategoryController : ControllerBase
-//    {
-//        private readonly I _categoryService;
+namespace InventoryApp.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CategoryController : ControllerBase
+    {
+        private readonly ICategoryService _categoryService;
 
-//        public CategoryController(ICategoryService categoryService)
-//        {
-//            _categoryService = categoryService;
-//        }
+        public CategoryController(ICategoryService categoryService)
+        {
+            _categoryService = categoryService;
+        }
 
-//        // GET: api/category
-//        [HttpGet]
-//        public async Task<IActionResult> GetAll()
-//        {
-//            var categories = await _categoryService.GetAllAsync();
-//            return Ok(categories);
-//        }
+        // GET: api/category
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var categories = await _categoryService.GetAllCategoriesAsync();
+            return Ok(categories);
+        }
 
-//        // GET: api/category/5
-//        [HttpGet("{id}")]
-//        public async Task<IActionResult> GetById(int id)
-//        {
-//            var category = await _categoryService.GetByIdAsync(id);
+        // GET: api/category/5
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var category = await _categoryService.GetCategoryByIdAsync(id);
 
-//            if (category == null)
-//                return NotFound("Category not found");
+            if (category == null)
+                return NotFound("Category not found");
 
-//            return Ok(category);
-//        }
+            return Ok(category);
+        }
 
-//        // POST: api/category
-//        [HttpPost]
-//        public async Task<IActionResult> Create(CategoryDto dto)
-//        {
-//            var createdCategory = await _categoryService.CreateAsync(dto);
-//            return Ok(createdCategory);
-//        }
+        // POST: api/category
+        [HttpPost]
+        public async Task<IActionResult> CreateAsync(CategoryDto dto)
+        {
+            var createdCategory = await _categoryService.CreateAsync(dto);
+            return Ok(createdCategory);
+        }
 
-//        // PUT: api/category/5
-//        [HttpPut("{id}")]
-//        public async Task<IActionResult> Update(int id, CategoryDto dto)
-//        {
-//            var result = await _categoryService.UpdateAsync(id, dto);
+        // PUT: api/category/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, CategoryDto dto)
+        {
+            var result = await _categoryService.GetCategoryByIdAsync(id);
 
-//            if (!result)
-//                return NotFound("Category not found");
+            if (result == null)
+                return NotFound("Category not found");
 
-//            return Ok("Category updated successfully");
-//        }
+            await _categoryService.UpdateAsync(id, dto);
+            return Ok("Category updated successfully");
+        }
 
-//        // DELETE: api/category/5
-//        [HttpDelete("{id}")]
-//        public async Task<IActionResult> Delete(int id)
-//        {
-//            var result = await _categoryService.DeleteAsync(id);
+        // DELETE: api/category/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _categoryService.DeleteAsync(id);
 
-//            if (!result)
-//                return NotFound("Category not found");
+            if (!result)
+                return NotFound("Category not found");
 
-//            return Ok("Category deleted successfully");
-//        }
-//    }
-//}
+            return Ok("Category deleted successfully");
+        }
+    }
+}
 

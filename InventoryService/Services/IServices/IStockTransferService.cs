@@ -13,8 +13,8 @@ namespace InventoryService.Services.IServices
 
         Task<StockTransferDto?> GetTransferByIdAsync(int id);
 
-        Task<StockTransferDto> CreateTransferAsync(StockTransferDto dto);
+        Task<StockTransferDto> CreateAsync(StockTransferDto dto);
 
-        Task DeleteTransferAsync(int id);
+        Task DeleteAsync(int id);
     }
 }

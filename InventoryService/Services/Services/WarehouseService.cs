@@ -43,7 +43,7 @@ namespace InventoryService.Services.Services
             };
         }
 
-        public async Task<WarehouseDto> CreateWarehouseAsync(WarehouseDto dto)
+        public async Task<WarehouseDto> CreateAsync(WarehouseDto dto)
         {
             var warehouse = new Warehouse
             {
@@ -59,7 +59,7 @@ namespace InventoryService.Services.Services
             return dto;
         }
 
-        public async Task UpdateWarehouseAsync(int id, WarehouseDto dto)
+        public async Task UpdateAsync(int id, WarehouseDto dto)
         {
             var warehouse = await _warehouseRepo.GetByIdAsync(id);
 
@@ -74,7 +74,7 @@ namespace InventoryService.Services.Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task DeleteWarehouseAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var warehouse = await _warehouseRepo.GetByIdAsync(id);
 

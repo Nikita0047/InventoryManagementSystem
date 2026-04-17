@@ -13,10 +13,10 @@ namespace InventoryService.Services.IServices
 
         Task<CategoryDto?> GetCategoryByIdAsync(int id);
 
-        Task<CategoryDto> CreateCategoryAsync(CategoryDto dto);
+        Task<CategoryDto> CreateAsync(CategoryDto dto);
 
-        Task UpdateCategoryAsync(int id, CategoryDto dto);
+        Task UpdateAsync(int id, CategoryDto dto);
 
-        Task DeleteCategoryAsync(int id);
+        Task<bool> DeleteAsync(int id);
     }
 }
