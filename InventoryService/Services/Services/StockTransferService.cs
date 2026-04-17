@@ -56,7 +56,7 @@ namespace InventoryService.Services.Services
             };
         }
 
-        public async Task<StockTransferDto> CreateTransferAsync(StockTransferDto dto)
+        public async Task<StockTransferDto> CreateAsync(StockTransferDto dto)
         {
             var transfer = new StockTransfer
             {
@@ -85,7 +85,7 @@ namespace InventoryService.Services.Services
             return dto;
         }
 
-        public async Task DeleteTransferAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var transfer = await _transferRepo.GetByIdAsync(id);
 

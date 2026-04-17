@@ -45,7 +45,7 @@ namespace InventoryService.Services.Services
             };
         }
 
-        public async Task<ProductDto> CreateProductAsync(ProductDto dto)
+        public async Task<ProductDto> CreateAsync(ProductDto dto)
         {
             var product = new Product
             {
@@ -54,7 +54,7 @@ namespace InventoryService.Services.Services
                 CategoryId = dto.CategoryId
             };
 
-            await _productRepo.CreateAsync(product);
+            await _productRepo.AddAsync(product);
             await _unitOfWork.SaveAsync();
 
             dto.Id = product.Id;
@@ -62,7 +62,7 @@ namespace InventoryService.Services.Services
             return dto;
         }
 
-        public async Task UpdateProductAsync(int id, ProductDto dto)
+        public async Task UpdateAsync(int id, ProductDto dto)
         {
             var product = await _productRepo.GetByIdAsync(id);
 
@@ -78,7 +78,7 @@ namespace InventoryService.Services.Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task DeleteProductAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var product = await _productRepo.GetByIdAsync(id);
 

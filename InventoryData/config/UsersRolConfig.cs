@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace InventoryData.config
 {
@@ -18,11 +19,13 @@ namespace InventoryData.config
 
             builder.HasOne(ur => ur.User)
                    .WithMany(u => u.UsersRole)
-                   .HasForeignKey(ur => ur.UserId);
+                   .HasForeignKey(ur => ur.UserId)
+                   .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(ur => ur.Role)
                    .WithMany(r => r.UsersRole)
-                   .HasForeignKey(ur => ur.RoleId);
+                   .HasForeignKey(ur => ur.RoleId)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

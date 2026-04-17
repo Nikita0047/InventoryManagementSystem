@@ -10,7 +10,7 @@ namespace InventoryService.Services.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Category> _categoryRepo;
 
-        public CategoryService(IUnitOfWork unitOfWork, Repository<Category> categoryRepo)
+        public CategoryService(IUnitOfWork unitOfWork, IRepository<Category> categoryRepo)
         {
             _unitOfWork = unitOfWork;
             _categoryRepo = categoryRepo;
@@ -41,7 +41,7 @@ namespace InventoryService.Services.Services
             };
         }
 
-        public async Task<CategoryDto> CreateCategoryAsync(CategoryDto dto)
+        public async Task<CategoryDto> CreateAsync(CategoryDto dto)
         {
             var category = new Category
             {
@@ -56,7 +56,7 @@ namespace InventoryService.Services.Services
             return dto;
         }
 
-        public async Task UpdateCategoryAsync(int id, CategoryDto dto)
+        public async Task UpdateAsync(int id, CategoryDto dto)
         {
             var category = await _categoryRepo.GetByIdAsync(id);
 
@@ -69,17 +69,20 @@ namespace InventoryService.Services.Services
 
             await _unitOfWork.SaveAsync();
         }
+        
 
-        public async Task DeleteCategoryAsync(int id)
+       public async Task<bool> DeleteAsync(int id)
         {
-            var category = await _categoryRepo.GetByIdAsync(id);
-
-            if (category == null)
-                throw new Exception("Category not found");
-
-            _categoryRepo.Delete(category);
-
-            await _unitOfWork.SaveAsync();
+            var result = await _categoryRepo.GetByIdAsync(id);
+            if (result == null) 
+            {
+                return false;
+                throw new NotImplementedException();
+            }
+            return true;
+              
         }
+
+        
     }
 }
