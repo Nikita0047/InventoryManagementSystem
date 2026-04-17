@@ -1,0 +1,88 @@
+﻿using InventoryModels.DTOs;
+using InventoryModels.Entity;
+using InventoryRepository.Repository;
+using InventoryService.Services.IServices;
+
+namespace InventoryService.Services.Services
+{
+    public class CategoryService : ICategoryService
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Category> _categoryRepo;
+
+        public CategoryService(IUnitOfWork unitOfWork, IRepository<Category> categoryRepo)
+        {
+            _unitOfWork = unitOfWork;
+            _categoryRepo = categoryRepo;
+        }
+
+        public async Task<IEnumerable<CategoryDto>> GetAllCategoriesAsync()
+        {
+            var categories = await _categoryRepo.GetAllAsync();
+
+            return categories.Select(c => new CategoryDto
+            {
+                Id = c.Id,
+                Name = c.Name
+            });
+        }
+
+        public async Task<CategoryDto?> GetCategoryByIdAsync(int id)
+        {
+            var category = await _categoryRepo.GetByIdAsync(id);
+
+            if (category == null)
+                return null;
+
+            return new CategoryDto
+            {
+                Id = category.Id,
+                Name = category.Name
+            };
+        }
+
+        public async Task<CategoryDto> CreateAsync(CategoryDto dto)
+        {
+            var category = new Category
+            {
+                Name = dto.Name
+            };
+
+            await _categoryRepo.AddAsync(category);
+            await _unitOfWork.SaveAsync();
+
+            dto.Id = category.Id;
+
+            return dto;
+        }
+
+        public async Task UpdateAsync(int id, CategoryDto dto)
+        {
+            var category = await _categoryRepo.GetByIdAsync(id);
+
+            if (category == null)
+                throw new Exception("Category not found");
+
+            category.Name = dto.Name;
+
+            _categoryRepo.Update(category);
+
+            await _unitOfWork.SaveAsync();
+        }
+        
+
+       public async Task<bool> DeleteAsync(int id)
+        {
+            var result = await _categoryRepo.GetByIdAsync(id);
+            if (result == null) 
+            {
+                return false;
+                throw new NotImplementedException();
+            }
+            return true;
+              
+        }
+
+        
+    }
+}
