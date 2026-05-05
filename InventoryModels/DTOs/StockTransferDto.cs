@@ -8,6 +8,7 @@ namespace InventoryModels.DTOs
 {
     public class StockTransferDto
     {
+        public int id { get; set; }
         public int FromWarehouseId { get; set; }
         public int ToWarehouseId { get; set; }
 

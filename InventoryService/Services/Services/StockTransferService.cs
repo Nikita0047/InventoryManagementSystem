@@ -2,6 +2,7 @@
 using InventoryModels.Entity;
 using InventoryRepository.Repository;
 using InventoryService.Services.IServices;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventoryService.Services.Services
 {
@@ -23,8 +24,12 @@ namespace InventoryService.Services.Services
 
         public async Task<IEnumerable<StockTransferDto>> GetAllTransfersAsync()
         {
-            var transfers = await _transferRepo.GetAllAsync();
-
+            var transfers = await _transferRepo.GetQuery()
+                      .Include(t => t.Items)
+                    .ThenInclude(i => i.Product)
+                    .Include(t => t.FromWarehouse)  // ← now works!
+                    .Include(t => t.ToWarehouse)    // ← now works!
+                    .ToListAsync();
             return transfers.Select(t => new StockTransferDto
             {
                 FromWarehouseId = t.FromWarehouseId,

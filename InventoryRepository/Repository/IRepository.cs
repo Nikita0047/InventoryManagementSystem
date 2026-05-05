@@ -22,5 +22,8 @@ namespace InventoryRepository.Repository
         Task<Users> GetByUsernameAsync(string username);
         Task<bool> EmailExistsAsync(string email);
         Task<bool> UsernameExistsAsync(string username);
+
+        Task<List<Users>> GetAllWithIncludesAsync();
+        Task<Users?> GetByIdWithIncludesAsync(int id);
     }
 }
