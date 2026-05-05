@@ -42,7 +42,7 @@ namespace InventoryService.Services.Services
 
 
 
-            var expiryMinutes = int.Parse(_config["Jwt:ExpiryMinutes"]);
+            var expiryMinutes = int.Parse(_config["Jwt:ExpiryMinutes"] ?? "30");
             var token = await GenrateJwtToken(user);
 
             return new AuthResponse
@@ -53,7 +53,15 @@ namespace InventoryService.Services.Services
                 Email = user.Email,
                 Token = token,
                 ExpiresAt = DateTime.UtcNow.AddMinutes(expiryMinutes),
+                Roles = user.UsersRole
+                .Select(ur => ur.Role.Name)
+                .ToList(),
 
+                Permissions = user.UsersRole
+                      .SelectMany(ur => ur.Role.RolePermissions)
+                      .Select(rp => rp.Permission.Code)
+                      .Distinct()
+                      .ToList()
 
             };
 

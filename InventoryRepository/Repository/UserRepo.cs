@@ -27,12 +27,16 @@ namespace InventoryRepository.Repository
             return await _dbSet.AnyAsync(u => u.Email == normalizedEmail);
         }
 
-       
+
 
         public async Task<Users> GetByEmailAsync(string email)
         {
             var normalizedEmail = email.ToLower().Trim();
-            return await _dbSet.FirstOrDefaultAsync(u => u.Email == normalizedEmail);
+            return await _dbSet.Include(u => u.UsersRole)
+            .ThenInclude(ur => ur.Role)
+                .ThenInclude(r => r.RolePermissions)    // ← needed
+                    .ThenInclude(rp => rp.Permission)   // ← needed
+                     .FirstOrDefaultAsync(u => u.Email == email);
         }
 
        
@@ -52,6 +56,27 @@ namespace InventoryRepository.Repository
             return await _dbSet.AnyAsync(u =>
                 ((u.FirstName ?? "") + " " + (u.LastName ?? ""))
                 .ToLower().Trim() == normalizedUsername);
+        }
+
+        public async Task<List<Users>> GetAllWithIncludesAsync()
+        {
+            return await _dbSet
+                .Include(u => u.UsersRole)
+                    .ThenInclude(ur => ur.Role)
+                        .ThenInclude(r => r.RolePermissions)
+                            .ThenInclude(rp => rp.Permission)
+                .ToListAsync();
+        }
+
+        // ← NEW
+        public async Task<Users?> GetByIdWithIncludesAsync(int id)
+        {
+            return await _dbSet
+                .Include(u => u.UsersRole)
+                    .ThenInclude(ur => ur.Role)
+                        .ThenInclude(r => r.RolePermissions)
+                            .ThenInclude(rp => rp.Permission)
+                .FirstOrDefaultAsync(u => u.Id == id);
         }
     }
 }
